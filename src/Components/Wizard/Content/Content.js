@@ -1,12 +1,17 @@
 import React from "react";
 import { useForm } from "react-hook-form";
+import Buttons from "../Buttons/Buttons";
+import Dichotomous from "./Dichotomous/Dichotomous";
 
 const Content = ({
   currentStep,
   stepList,
-  handleStatusChange,
   setAllContent,
-  currentStatus,
+  handlePrevious,
+  handleNext,
+  handleReset,
+  allContent,
+  success,
 }) => {
   const {
     register,
@@ -21,44 +26,221 @@ const Content = ({
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="text-left flex flex-col items-center mt-10 my-16"
+      className="text-left flex flex-col items-center mt-10 "
     >
       {currentStep === 1 && (
-        <div className="w-full md:w-3/4 px-3 mb-6 md:mb-0">
-          <label className="block tracking-wide text-gray-200 font-bold mb-2">
-            Business Owner?
-          </label>
-          <div className="relative">
-            <select
-              {...register("first", { required: true })}
-              onChange={handleStatusChange}
-              className="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-              id="grid-state"
-            >
-              <option>Yes</option>
-              <option>No</option>
-            </select>
-            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-              <svg
-                className="fill-current h-4 w-4"
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 20 20"
-              >
-                <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
-              </svg>
-            </div>
-          </div>
-        </div>
+        <Dichotomous
+          heading="Business Owner?"
+          name="owner"
+          register={register}
+          errors={errors}
+        />
       )}
 
-      {currentStep === stepList[stepList.length - 1] && (
-        <button
-          className="px-6 py-3 rounded-full bg-green-400 text-gray-800 font-semibold"
-          type="submit"
-        >
-          Submit
-        </button>
+      {currentStep === 2 && allContent.owner === "Yes" ? (
+        <Dichotomous heading="Located in US?" name="US" register={register} />
+      ) : currentStep === 2 && allContent.owner === "No" ? (
+        <Dichotomous
+          heading="Login with Facebook?"
+          name="fbLogin"
+          register={register}
+        />
+      ) : (
+        ""
       )}
+
+      {currentStep === 3 &&
+      allContent.owner === "Yes" &&
+      allContent.US === "Yes" ? (
+        <Dichotomous
+          heading="Large Corporation?"
+          name="largeCorp"
+          register={register}
+        />
+      ) : currentStep === 3 &&
+        allContent.owner === "Yes" &&
+        allContent.US === "No" ? (
+        <p className="text-red-400 text-lg font-bold">Access Denied Error!</p>
+      ) : (
+        ""
+      )}
+
+      {currentStep === 3 &&
+      allContent.owner === "No" &&
+      allContent.fbLogin === "Yes" ? (
+        <Dichotomous
+          heading="Placeholder for Fb login. Yes = Shows Small Corp Options, No = Shows Large Corp Options"
+          name="fbLoggedIn"
+          register={register}
+        />
+      ) : currentStep === 3 &&
+        allContent.owner === "No" &&
+        allContent.fbLogin === "No" ? (
+        <Dichotomous
+          heading="Placeholder for email login. No = Shows Small Corp Options, Yes = Shows Large Corp Options"
+          name="emailLoggedIn"
+          register={register}
+        />
+      ) : (
+        ""
+      )}
+
+      {currentStep === 4 &&
+      allContent.owner === "No" &&
+      allContent.fbLogin === "Yes" &&
+      allContent.fbLoggedIn === "Yes" ? (
+        <Dichotomous
+          heading="Connected with large corporation?"
+          name="connection"
+          register={register}
+        />
+      ) : currentStep === 4 &&
+        allContent.owner === "No" &&
+        allContent.fbLogin === "Yes" &&
+        allContent.fbLoggedIn === "No" ? (
+        <Dichotomous
+          heading="Interested in taking survey?"
+          name="survey"
+          register={register}
+        />
+      ) : (
+        ""
+      )}
+
+      {currentStep === 5 &&
+      allContent.owner === "No" &&
+      allContent.fbLogin === "Yes" &&
+      allContent.fbLoggedIn === "No" ? (
+        <p className="text-green-400 text-lg font-bold">
+          Placeholder for Large Corporation Sign Up From
+        </p>
+      ) : currentStep === 5 &&
+        allContent.owner === "No" &&
+        allContent.fbLogin === "Yes" &&
+        allContent.fbLoggedIn === "Yes" &&
+        allContent.connection === "Yes" ? (
+        <p className="text-yellow-400 text-lg font-bold">
+          User must contact large corporation
+        </p>
+      ) : currentStep === 5 &&
+        allContent.owner === "No" &&
+        allContent.fbLogin === "Yes" &&
+        allContent.fbLoggedIn === "Yes" &&
+        allContent.connection === "No" ? (
+        <p className="text-green-400 text-lg font-bold">
+          Placeholder for Small Corp Sign up form
+        </p>
+      ) : (
+        ""
+      )}
+
+      {currentStep === 4 &&
+      allContent.owner === "No" &&
+      allContent.fbLogin === "Yes" &&
+      allContent.emailLoggedIn === "No" ? (
+        <Dichotomous
+          heading="Connected with large corporation?"
+          name="connection"
+          register={register}
+        />
+      ) : currentStep === 4 &&
+        allContent.owner === "No" &&
+        allContent.fbLogin === "Yes" &&
+        allContent.emailLoggedIn === "Yes" ? (
+        <Dichotomous
+          heading="Interested in taking survey?"
+          name="survey"
+          register={register}
+        />
+      ) : (
+        ""
+      )}
+
+      {currentStep === 5 &&
+      allContent.owner === "No" &&
+      allContent.fbLogin === "Yes" &&
+      allContent.emailLoggedIn === "Yes" ? (
+        <p className="text-green-400 text-lg font-bold">
+          Placeholder for Large Corporation Sign Up From
+        </p>
+      ) : currentStep === 5 &&
+        allContent.owner === "No" &&
+        allContent.fbLogin === "Yes" &&
+        allContent.emailLoggedIn === "Yes" &&
+        allContent.connection === "Yes" ? (
+        <p className="text-yellow-400 text-lg font-bold">
+          User must contact large corporation
+        </p>
+      ) : currentStep === 5 &&
+        allContent.owner === "No" &&
+        allContent.fbLogin === "Yes" &&
+        allContent.emailLoggedIn === "Yes" &&
+        allContent.connection === "No" ? (
+        <p className="text-green-400 text-lg font-bold">
+          Placeholder for Small Corp Sign up form
+        </p>
+      ) : (
+        ""
+      )}
+
+      {currentStep === 4 &&
+      allContent.owner === "Yes" &&
+      allContent.US === "Yes" &&
+      allContent.largeCorp === "Yes" ? (
+        <Dichotomous
+          heading="Interested in taking survey?"
+          name="survey"
+          register={register}
+        />
+      ) : currentStep === 4 &&
+        allContent.owner === "Yes" &&
+        allContent.US === "Yes" &&
+        allContent.largeCorp === "No" ? (
+        <Dichotomous
+          heading="Connected with large corporation?"
+          name="connection"
+          register={register}
+        />
+      ) : (
+        ""
+      )}
+
+      {currentStep === 5 &&
+      allContent.owner === "Yes" &&
+      allContent.US === "Yes" &&
+      allContent.largeCorp === "Yes" ? (
+        <p className="text-green-400 text-lg font-bold">
+          Placeholder for Large Corporation Sign Up From
+        </p>
+      ) : currentStep === 5 &&
+        allContent.owner === "Yes" &&
+        allContent.US === "Yes" &&
+        allContent.largeCorp === "No" &&
+        allContent.connection === "Yes" ? (
+        <p className="text-yellow-400 text-lg font-bold">
+          User must contact large corporation
+        </p>
+      ) : currentStep === 5 &&
+        allContent.owner === "Yes" &&
+        allContent.US === "Yes" &&
+        allContent.largeCorp === "No" &&
+        allContent.connection === "No" ? (
+        <p className="text-green-400 text-lg font-bold">
+          Placeholder for Small Corp Sign up form
+        </p>
+      ) : (
+        ""
+      )}
+
+      {currentStep === 6 ? success : ""}
+
+      <Buttons
+        handlePrevious={handlePrevious}
+        handleNext={handleNext}
+        handleReset={handleReset}
+        currentStep={currentStep}
+        stepList={stepList}
+      />
     </form>
   );
 };

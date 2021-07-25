@@ -2,15 +2,14 @@ import React, { useState, useEffect } from "react";
 import Title from "./Title/Title";
 import Steps from "./Steps/Steps";
 import Content from "./Content/Content";
-import Buttons from "./Buttons/Buttons";
 
-const steps = [1, 2, 3, 4, 5];
+const steps = [1, 2, 3, 4, 5, 6];
 
 const Wizard = () => {
   const [stepList, setStepList] = useState([]);
   const [currentStep, setCurrentStep] = useState(1);
-  const [currentStatus, setCurrentStatus] = useState(true);
   const [allContent, setAllContent] = useState([]);
+  const [success, setSuccess] = useState("");
 
   useEffect(() => {
     setStepList(steps);
@@ -23,6 +22,14 @@ const Wizard = () => {
     ) {
       setCurrentStep((prev) => prev + 1);
     }
+
+    if (currentStep === stepList[stepList.length - 1]) {
+      setSuccess(
+        <p className="text-green-400 text-lg font-bold">
+          Form submission successful!
+        </p>
+      );
+    }
   };
 
   const handlePrevious = () => {
@@ -34,15 +41,10 @@ const Wizard = () => {
     }
   };
 
-  const handleStatusChange = (e) => {
-    if (e.currentTarget.value === "No") {
-      setCurrentStatus(false);
-    } else setCurrentStatus(true);
-  };
-
   const handleReset = () => {
     setCurrentStep(1);
     setAllContent([]);
+    window.location.reload();
   };
 
   return (
@@ -54,17 +56,12 @@ const Wizard = () => {
       <Content
         currentStep={currentStep}
         stepList={stepList}
-        currentStatus={currentStatus}
         setAllContent={setAllContent}
-        handleStatusChange={handleStatusChange}
-      />
-
-      <Buttons
         handlePrevious={handlePrevious}
         handleNext={handleNext}
         handleReset={handleReset}
-        currentStep={currentStep}
-        stepList={stepList}
+        allContent={allContent}
+        success={success}
       />
     </section>
   );
