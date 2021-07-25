@@ -232,7 +232,18 @@ const Content = ({
         ""
       )}
 
-      {currentStep === 6 ? success : ""}
+      {currentStep === 6 ? (
+        <div>
+          {!success && (
+            <p className="text-yellow-400 text-lg font-bold mt-5">
+              Submit Information?
+            </p>
+          )}
+          {success}
+        </div>
+      ) : (
+        ""
+      )}
 
       <Buttons
         handlePrevious={handlePrevious}

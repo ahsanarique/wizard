@@ -25,7 +25,7 @@ const Wizard = () => {
 
     if (currentStep === stepList[stepList.length - 1]) {
       setSuccess(
-        <p className="text-green-400 text-lg font-bold">
+        <p className="text-green-400 text-lg font-bold mt-5">
           Form submission successful!
         </p>
       );
